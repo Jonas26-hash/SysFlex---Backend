@@ -20,61 +20,30 @@ public class ServicioController {
 
     private final ServicioService servicioService;
 
-    // =========================
-    // LISTAR + BUSCAR (código / fecha)
-    // =========================
-    /**
-     * GET /api/servicios
-     * GET /api/servicios?codigo=SE01
-     * GET /api/servicios?fecha=2025-05-28
-     * GET /api/servicios?codigo=SE01&fecha=2025-05-28
-     */
     @GetMapping
     public List<ServicioResumenDTO> listar(
             @RequestParam(required = false) String codigo,
             @RequestParam(required = false)
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fecha
     ) {
-        // Si viene algún filtro -> usar búsqueda
         if (codigo != null || fecha != null) {
             return servicioService.buscar(codigo, fecha);
         }
-        // Si no hay filtros -> listar todo
         return servicioService.listar();
     }
 
-    // =========================
-    // DETALLE
-    // =========================
-    /**
-     * GET /api/servicios/{id}
-     */
     @GetMapping("/{id}")
     public ResponseEntity<ServicioDetalleDTO> obtenerPorId(@PathVariable Long id) {
         ServicioDetalleDTO dto = servicioService.obtenerPorId(id);
         return ResponseEntity.ok(dto);
     }
 
-    // =========================
-    // CREAR
-    // =========================
-    /**
-     * POST /api/servicios
-     * Body: ServicioCreateDTO
-     */
     @PostMapping
     public ResponseEntity<ServicioDetalleDTO> crear(@RequestBody ServicioCreateDTO dto) {
         ServicioDetalleDTO creado = servicioService.crear(dto);
         return ResponseEntity.ok(creado);
     }
 
-    // =========================
-    // ACTUALIZAR
-    // =========================
-    /**
-     * PUT /api/servicios/{id}
-     * Body: ServicioCreateDTO
-     */
     @PutMapping("/{id}")
     public ResponseEntity<ServicioDetalleDTO> actualizar(
             @PathVariable Long id,
@@ -84,12 +53,6 @@ public class ServicioController {
         return ResponseEntity.ok(actualizado);
     }
 
-    // =========================
-    // ELIMINAR
-    // =========================
-    /**
-     * DELETE /api/servicios/{id}
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         servicioService.eliminar(id);
